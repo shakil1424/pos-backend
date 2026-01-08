@@ -41,10 +41,9 @@ Route::middleware(['auth:sanctum', 'api.tenant'])->group(function () {
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
     Route::post('/orders/{order}/mark-as-paid', [OrderController::class, 'markAsPaid']);
 
-    // Reports (Owner only)
     Route::prefix('reports')->group(function () {
-        Route::get('/daily-sales', [ReportController::class, 'dailySales']);
-        Route::get('/top-products', [ReportController::class, 'topProducts']);
-        Route::get('/low-stock', [ReportController::class, 'lowStock']);
+        Route::get('/daily-sales', [ReportController::class, 'dailySales'])->name('reports.daily-sales');
+        Route::get('/top-products', [ReportController::class, 'topProducts'])->name('reports.top-products');
+        Route::get('/low-stock', [ReportController::class, 'lowStock'])->name('reports.low-stock');
     });
 });
