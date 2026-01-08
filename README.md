@@ -1,66 +1,370 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Multi-Tenant POS Backend System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A complete, production-ready **Point of Sale (POS) & Inventory Management Backend** built with **Laravel**. The system is designed with **multi-tenancy**, **role-based access control**, and **scalable architecture** suitable for SaaS use cases.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Multi-Tenant Architecture** – Strict data isolation per business
+- **Role-Based Access Control** – Owner & Staff roles
+- **Inventory Management** – Products with stock tracking
+- **Order Processing** – Create, update, cancel orders with stock sync
+- **Customer Management** – Customer records per tenant
+- **Reporting Module** – Daily sales, top products, low stock
+- **RESTful API** – Clean JSON APIs
+- **Security** – Laravel Sanctum, validation, rate limiting
+- **Performance** – Indexed DB, eager loading
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Technology Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **PHP 8.2+**
+- **Laravel 10.x**
+- **MySQL 8+ / MariaDB**
+- **SQLite** (testing)
+- **Laravel Sanctum** (authentication)
+- **PHPUnit** (testing)
+- **XAMPP** (local development)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Project Setup Instructions
 
-## Laravel Sponsors
+### Prerequisites
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP 8.2+
+- Composer
+- MySQL 8+
+- XAMPP / LAMP / WAMP
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Step 1: Clone & Install
 
-## Contributing
+```bash
+git clone https://github.com/shakil1424/pos-backend.git
+cd pos-backend
+composer install
+cp .env.example .env
+php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+### Step 2: Database Configuration
+- Create a MySQL database named `pos_backend`.
+- Create `.env` and update the following:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=pos_backend
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
+
+### Step 3: Migrate & Seed
+
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+---
+
+### Step 4: XAMPP Virtual Host
+
+**Apache vhost:**
+
+```apache
+<VirtualHost *:80>
+    DocumentRoot "C:/xampp/htdocs/pos-backend/public"
+    ServerName pos-backend.test
+    <Directory "C:/xampp/htdocs/pos-backend/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+**Hosts file:**
+
+```
+127.0.0.1 pos-backend.test
+```
+
+Restart Apache.
+
+---
+
+### Step 5: Application Setup
+
+In .env file set:
+
+```env
+APP_URL=http://pos-backend.test
+```
+
+```bash
+php artisan sanctum:install
+php artisan storage:link
+php artisan config:clear
+php artisan config:cache
+```
+
+---
+
+### Step 6: Testing
+
+- Set up testing environment:
+- Create `.env.testing` from `.env.testing.example`
+- Update `.env.testing` for SQLite:
+
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=:memory:
+```
+- Run tests using following commands:
+```bash
+php artisan test 
+php artisan test tests/Feature/CustomerTest.php
+php artisan test tests/Feature/OrderTest.php
+php artisan test tests/Feature/ProductTest.php
+php artisan test tests/Featests/Feature/AuthTest.phpture/ReportTest.php
+php artisan test tests/Feature/TenantIsolationTest.php
+````
+- For specific feature
+```bash
+php artisan test tests/Feature/AuthTest.php --filter=test_user_can_register
+```
+
+---
+
+## Architecture Overview
+
+### Project Structure
+
+```
+pos-backend/
+├── app/
+│   ├── Console/Commands
+│   ├── Http/
+│   │   ├── Controllers/Api
+│   │   ├── Middleware
+│   │   ├── Requests
+│   │   └── Resources
+│   ├── Jobs
+│   ├── Mail
+│   ├── Models
+│   ├── Policies
+│   ├── Providers
+├── config/
+├── database/
+│   ├── migrations
+│   ├── factories
+│   └── seeders
+├── routes/
+├── tests/
+└── storage/
+```
+
+---
+
+### Core Components
+
+- **Tenant** – Business entity
+- **User** – Belongs to tenant
+- **Product** – Inventory per tenant
+- **Order** – Order details per tenant
+- **Customer** – CRM per tenant
+
+---
+
+### Request Flow
+
+1. User authenticates using Sanctum
+2. Client sends `tenant-id` in request header
+3. Tenant middleware reads `tenant-id` and sets tenant context
+4. Policies enforce role-based permissions within tenant scope
+
+## Multi-Tenancy Strategy
+
+### Tenant Hierarchy
+
+```
+Tenant
+├── Users
+├── Products
+├── Customers
+├── Orders
+```
+
+---
+
+### Design Approach
+
+#### 1. Single Database, Tenant ID Separation
+
+- All tenant-owned tables contain `tenant_id`
+- Foreign keys ensure referential integrity
+- Physical separation is avoided for operational simplicity
+
+---
+
+#### 2. Tenant Identification
+
+- Client sends `X-Tenant-ID` in every API request header
+- Tenant is validated (exists + active) in middleware
+- Tenant context is attached to the request and config
+
+---
+
+#### 3. Middleware-Based Tenant Resolution
+
+```php
+Route::middleware(['auth:sanctum', 'api.tenant'])->group(function () {
+    // Tenant-aware API routes
+});
+```
+- TenantMiddleware: Reads X-Tenant-ID
+
+- Validates tenant status
+
+- Injects tenant into request ($request->tenant)
+
+- Stores tenant ID in config for shared access
+
+- TenantScopeMiddleware (optional, explicit):
+  Applies runtime global scopes inside middleware.
+---
+
+## Key Design Decisions & Trade-offs
+
+### 1. Database Strategy
+**Decision:** Single database with tenant_id
+
+**Pros:**
+- Easy maintenance
+- Lower cost
+- Simple backups
+
+**Cons:**
+- Scaling limits
+- Shared risk surface
+
+**Trade-off:** Acceptable for hundreds of tenants
+
+---
+
+### 2. Authentication
+**Decision:** Laravel Sanctum
+
+**Pros:**
+- API + SPA support
+- Built-in security
+
+**Cons:**
+- DB token storage
+
+---
+
+### 3. API Design
+**Decision:** RESTful JSON APIs
+
+**Pros:**
+- Simple integration
+- Predictable
+
+**Cons:**
+- Over-fetching risk
+
+---
+
+### 4. Testing
+**Decision:** SQLite for tests
+
+**Pros:**
+- Fast execution
+- CI friendly
+
+**Cons:**
+- MySQL edge cases not covered
+
+---
+
+### 5. Queue Strategy
+
+**Decision:** Hybrid approach — synchronous for small datasets, asynchronous for large reports
+
+**Rationale:**
+- Reports covering a **short date range** are generated **synchronously** for immediate API response
+- Reports exceeding a configurable threshold are **queued and delivered via email**
+- Prevents long-running HTTP requests and timeouts
+- Balances user experience with system performance
+
+**Implementation Details:**
+- Date range is evaluated at runtime
+- Threshold is configurable via `reports.immediate_threshold_days`
+- Laravel Jobs are used for background processing
+- Queues are introduced only when computational cost justifies it
+
+
+---
+
+## API Endpoints
+
+### Auth
+- `POST /api/register`
+- `POST /api/login`
+- `POST /api/logout`
+- `GET /api/user`
+- `GET /api/staff/register`
+
+### Products
+- `GET /api/products`
+- `POST /api/products`
+- `PUT /api/products/{id}`
+- `GET /api/products/{id}`
+- `DELETE /api/products/{id}`
+
+### Customers
+- `GET /api/customers`
+- `POST /api/customers`
+- `PUT /api/customers/{id}`
+- `GET /api/customers/{id}`
+- `DELETE /api/customers/{id}`
+
+### Orders
+- `GET /api/orders`
+- `POST /api/orders`
+- `PUT /api/orders/{id}`
+- `DELETE /api/orders/{id}`
+- `GET /api/orders/{id}`
+
+### Reports
+- `GET /api/reports/daily-sales`
+- `GET /api/reports/top-products`
+- `GET /api/reports/low-stock`
+
+---
+
+## Security Considerations
+
+- API rate limiting
+- Input validation
+- SQL injection protection
+- CSRF protection
+- Proper CORS configuration
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proprietary software. All rights reserved.
+
