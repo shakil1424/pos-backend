@@ -2,15 +2,16 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Customer;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\DB;
 
 class StoreOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', \App\Models\Order::class);
+        return $this->user()->can('create', Order::class);
     }
 
     public function rules(): array
@@ -27,6 +28,19 @@ class StoreOrderRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+            if ($this->has('customer_id')) {
+                $tenantId = $this->header('X-Tenant-ID');
+                $customer = Customer::where('id', $this->customer_id)
+                    ->where('tenant_id', $tenantId)
+                    ->first();
+
+                if (!$customer) {
+                    $validator->errors()->add(
+                        'customer_id',
+                        'Customer not found in your business.'
+                    );
+                }
+            }
             if ($this->has('items')) {
                 $tenantId = $this->header('X-Tenant-ID');
 
