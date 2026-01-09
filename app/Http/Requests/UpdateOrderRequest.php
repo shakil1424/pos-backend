@@ -44,7 +44,6 @@ class UpdateOrderRequest extends FormRequest
         $validator->after(function ($validator) {
             $order = $this->route('order');
 
-            // If customer_id is being updated
             if ($this->has('customer_id') && $this->customer_id != $order->customer_id) {
                 $customer = Customer::where('id', $this->customer_id)
                     ->where('tenant_id', $order->tenant_id)
@@ -58,7 +57,6 @@ class UpdateOrderRequest extends FormRequest
                 }
             }
 
-            // If items are being updated
             if ($this->has('items')) {
                 foreach ($this->items as $index => $item) {
                     $product = \App\Models\Product::where('id', $item['product_id'])
@@ -80,9 +78,6 @@ class UpdateOrderRequest extends FormRequest
                         );
                     }
 
-                    // Check stock availability for new quantities
-                    // Note: You might want to add the existing order quantity back to stock
-                    // or handle this differently based on your business logic
                     if (!$product->hasSufficientStock($item['quantity'])) {
                         $validator->errors()->add(
                             "items.{$index}.quantity",
@@ -92,7 +87,6 @@ class UpdateOrderRequest extends FormRequest
                 }
             }
 
-            // Prevent updating certain fields if order is not pending
             if ($order->status !== 'pending') {
                 if ($this->has('items')) {
                     $validator->errors()->add(

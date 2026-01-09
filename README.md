@@ -136,7 +136,8 @@ php artisan test
 php artisan test tests/Feature/CustomerTest.php
 php artisan test tests/Feature/OrderTest.php
 php artisan test tests/Feature/ProductTest.php
-php artisan test tests/Featests/Feature/AuthTest.phpture/ReportTest.php
+php artisan test tests/Featests/Feature/AuthTest.php
+php artisan test tests/Featests/Feature/ReportTest.php
 php artisan test tests/Feature/TenantIsolationTest.php
 ````
 - For specific feature

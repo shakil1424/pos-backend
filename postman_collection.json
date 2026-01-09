@@ -564,6 +564,48 @@
 					"response": []
 				},
 				{
+					"name": "Update Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenant_id}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer_id\": 1,\n    \"items\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 2\n        }\n    ],\n    \"notes\": \"Gift wrapping required\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Order",
 					"request": {
 						"method": "GET",
@@ -606,6 +648,11 @@
 							{
 								"key": "X-Tenant-ID",
 								"value": "{{tenant_id}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
 								"type": "text"
 							}
 						],
